@@ -1,0 +1,100 @@
+---
+// Compétences groupées, « Données » en premier. Chacune renvoie aux projets ou expériences où elle a servi.
+import { competences, type Reference } from '../data/competences';
+import { experiences } from '../data/experiences';
+import { projets } from '../data/projets';
+
+/** Nom affiché et ancre de chaque projet ou expérience cité. */
+const cibles = new Map<string, { nom: string; ancre: string }>([
+  ...projets.map((p) => [p.slug, { nom: p.titre, ancre: `#projet-${p.slug}` }] as const),
+  ...experiences.map((e) => [e.id, { nom: `${e.type} ${e.structure}`, ancre: `#experience-${e.id}` }] as const),
+]);
+
+function cible(ref: Reference) {
+  const trouvee = cibles.get(ref);
+  if (!trouvee) throw new Error(`Compétence reliée à « ${ref} », qui n'existe ni dans projets.ts ni dans experiences.ts.`);
+  return trouvee;
+}
+---
+
+<div class="groupes">
+  {
+    competences.map((g) => (
+      <section class="groupe" aria-label={g.groupe}>
+        <h3>{g.groupe}</h3>
+        <ul class="groupe__liste">
+          {g.competences.map((c) => (
+            <li>
+              <span class="groupe__nom">{c.nom}</span>
+              {c.utilisee && (
+                <span class="groupe__vu">
+                  <span class="visuellement-cache">utilisé dans :</span>
+                  <span aria-hidden="true">→ </span>
+                  {c.utilisee.map((ref, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href={cible(ref).ancre}>{cible(ref).nom}</a>
+                    </>
+                  ))}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .groupes {
+    display: grid;
+    gap: var(--espace-4);
+  }
+  @media (min-width: 45rem) {
+    .groupes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 70rem) {
+    .groupes {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .groupe {
+    padding: var(--espace-4);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    background: var(--surface);
+  }
+  .groupe:first-child {
+    border-color: var(--accent);
+  }
+
+  .groupe h3 {
+    font-size: var(--taille-2);
+  }
+
+  .groupe__liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .groupe__liste li {
+    padding-block: var(--espace-1);
+  }
+  .groupe__liste li + li {
+    border-top: 1px dashed var(--bordure);
+  }
+
+  .groupe__nom {
+    font-weight: 600;
+  }
+
+  .groupe__vu {
+    display: block;
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+</style>

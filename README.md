@@ -25,7 +25,9 @@ npm run check      # vérifie le code TypeScript et Astro
 | Changer un texte qui me décrit, mes liens, ajouter un CV plus tard (`cvUrl`) | `src/data/profil.ts` |
 | Changer un libellé de l'interface (menu, boutons) | `src/i18n/fr.ts` |
 | Changer les couleurs ou les polices | `src/styles/variables.css` |
-| Ajouter un projet, une compétence *(phase 2)* | `src/data/projets.ts`, `src/data/competences.ts` |
+| Ajouter ou modifier un projet | `src/data/projets.ts` (images dans `src/assets/projets/`) |
+| Modifier une expérience, la formation, les compétences | `src/data/experiences.ts`, `src/data/formation.ts`, `src/data/competences.ts` |
+| Refaire l’image d’aperçu des réseaux sociaux (après un changement de nom ou de titre) | `npm run og` → `public/og.png` |
 
 ## Mise en ligne
 

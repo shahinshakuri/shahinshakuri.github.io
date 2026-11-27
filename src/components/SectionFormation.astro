@@ -1,0 +1,56 @@
+---
+// Formation : du plus récent au plus ancien, sans années pour le BUT (demande du brief).
+import { formation } from '../data/formation';
+---
+
+<ol class="formation" role="list">
+  {
+    formation.map((d) => (
+      <li class="diplome">
+        <h3>{d.titre}</h3>
+        {d.etablissement && <p class="diplome__lieu">{d.etablissement}</p>}
+        {d.detail && <p class="diplome__detail">{d.detail}</p>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .formation {
+    display: grid;
+    gap: var(--espace-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 60rem) {
+    .formation {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .diplome {
+    padding: var(--espace-4);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    background: var(--surface);
+  }
+
+  .diplome h3 {
+    font-size: var(--taille-2);
+    margin-bottom: var(--espace-2);
+  }
+
+  .diplome p {
+    margin-bottom: var(--espace-1);
+  }
+
+  .diplome__lieu {
+    color: var(--accent-texte);
+    font-weight: 600;
+  }
+
+  .diplome__detail {
+    color: var(--texte-doux);
+  }
+</style>

@@ -2,6 +2,12 @@
 import Base from '../layouts/Base.astro';
 import { profil } from '../data/profil';
 import { ui } from '../i18n/fr';
+import { projets } from '../data/projets';
+import CarteProjet from '../components/CarteProjet.astro';
+import SectionCompetences from '../components/SectionCompetences.astro';
+import SectionContact from '../components/SectionContact.astro';
+import SectionExperience from '../components/SectionExperience.astro';
+import SectionFormation from '../components/SectionFormation.astro';
 ---
 
 <Base accueil>
@@ -24,12 +30,11 @@ import { ui } from '../i18n/fr';
     </div>
   </section>
 
-  <!-- TODO(phase 2) : remplir chaque section avec src/data/*.ts (section 4 du brief). -->
   <section id="experience" class="section" aria-labelledby="titre-experience">
     <div class="conteneur">
       <span class="section__etiquette">01</span>
       <h2 id="titre-experience">{ui.sections.experience}</h2>
-      <p class="section__intro">Contenu ajouté en phase 2.</p>
+      <SectionExperience />
     </div>
   </section>
 
@@ -37,7 +42,18 @@ import { ui } from '../i18n/fr';
     <div class="conteneur">
       <span class="section__etiquette">02</span>
       <h2 id="titre-projets">{ui.sections.projets}</h2>
-      <p class="section__intro">Contenu ajouté en phase 2.</p>
+      <p class="section__intro">
+        Chaque projet est un niveau, du plus récent au plus ancien. Les projets d’école ont été réalisés en équipe.
+      </p>
+      <ol class="niveaux" role="list">
+        {
+          projets.map((projet, i) => (
+            <li>
+              <CarteProjet projet={projet} niveau={i + 1} />
+            </li>
+          ))
+        }
+      </ol>
     </div>
   </section>
 
@@ -45,7 +61,8 @@ import { ui } from '../i18n/fr';
     <div class="conteneur">
       <span class="section__etiquette">03</span>
       <h2 id="titre-competences">{ui.sections.competences}</h2>
-      <p class="section__intro">Contenu ajouté en phase 2.</p>
+      <p class="section__intro">Groupées par thème. Les liens mènent aux projets et expériences où je les ai utilisées.</p>
+      <SectionCompetences />
     </div>
   </section>
 
@@ -53,7 +70,7 @@ import { ui } from '../i18n/fr';
     <div class="conteneur">
       <span class="section__etiquette">04</span>
       <h2 id="titre-formation">{ui.sections.formation}</h2>
-      <p class="section__intro">Contenu ajouté en phase 2.</p>
+      <SectionFormation />
     </div>
   </section>
 
@@ -61,7 +78,7 @@ import { ui } from '../i18n/fr';
     <div class="conteneur">
       <span class="section__etiquette">05</span>
       <h2 id="titre-contact">{ui.sections.contact}</h2>
-      <p class="section__intro">Contenu ajouté en phase 2.</p>
+      <SectionContact />
     </div>
   </section>
 </Base>
@@ -141,6 +158,14 @@ import { ui } from '../i18n/fr';
     flex-wrap: wrap;
     gap: var(--espace-3);
     margin-top: var(--espace-4);
+  }
+
+  .niveaux {
+    display: grid;
+    gap: var(--espace-5);
+    margin: var(--espace-5) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
   /* Mode sobre : accueil plus compact */

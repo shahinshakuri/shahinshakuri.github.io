@@ -1,0 +1,240 @@
+---
+// Page détaillée du projet Fransi — seule source : section 4 de PORTFOLIO_BRIEF.md.
+// Dépôt privé : aucun lien vers le code ni vers le site (domaine pas encore branché).
+// Captures prises avec le script du projet (`npm run interface:captures`) sur une copie à part du dépôt.
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { projets } from '../../data/projets';
+import accueilPersan from '../../assets/projets/fransi/accueil-persan.png';
+import parcoursAnglais from '../../assets/projets/fransi/parcours-anglais.png';
+import exerciceAnglais from '../../assets/projets/fransi/exercice-anglais.png';
+import mobilePersan from '../../assets/projets/fransi/mobile-persan.png';
+
+const fransi = projets.find((p) => p.slug === 'fransi');
+if (!fransi) throw new Error('Projet « fransi » absent de src/data/projets.ts');
+
+const captures = [
+  {
+    src: accueilPersan,
+    alt: 'Page d’accueil en persan, thème sombre : titre « Apprenez le français, de A1 à B2 », boutons pour commencer au niveau A1 ou trouver son niveau, et premières unités des niveaux A1 et A2.',
+    legende: 'Accueil en persan, écrit de droite à gauche.',
+  },
+  {
+    src: parcoursAnglais,
+    alt: 'Page « Your path » en anglais : colonnes des niveaux A1 (Beginner, 12 unités) et A2 (Elementary, 14 unités), chaque unité avec son titre en français et son état.',
+    legende: 'Le parcours : un niveau par colonne, une unité par étape.',
+  },
+  {
+    src: exerciceAnglais,
+    alt: 'Exercice de l’unité « Bonjour ! » en anglais : question à choix multiple « Je ___ Darya. » avec les réponses « êtes » et « suis », et la liste des dix étapes de l’unité à droite.',
+    legende: 'Un exercice, avec l’avertissement « unité en cours de relecture ».',
+  },
+  {
+    src: mobilePersan,
+    alt: 'Accueil en persan sur téléphone, avec la barre de navigation en bas de l’écran.',
+    legende: 'Version mobile.',
+    mobile: true,
+  },
+];
+---
+
+<Base
+  titre="Fransi — apprendre le français pour persanophones"
+  description="Fransi : site gratuit et hors ligne pour apprendre le français de A1 à B2 et préparer le DELF, pour les personnes qui parlent persan. Projet personnel en cours."
+>
+  <article class="conteneur fransi" aria-labelledby="titre-fransi">
+    <nav class="fil" aria-label="Fil d’Ariane">
+      <a href="/#projet-fransi">← Retour aux projets</a>
+    </nav>
+
+    <header class="fransi__entete">
+      <p class="fransi__niveau mono">Niveau 1 <span class="badge">En cours</span></p>
+      <h1 id="titre-fransi">Fransi</h1>
+      <p class="fransi__sous-titre">Site d’apprentissage du français pour persanophones</p>
+      <ul class="fransi__meta" aria-label="En bref">
+        <li>{fransi.annee}</li>
+        <li>{fransi.contexte}</li>
+        <li>Dépôt privé</li>
+      </ul>
+      <p class="fransi__resume">{fransi.resume}</p>
+    </header>
+
+    <section aria-labelledby="titre-quoi">
+      <h2 id="titre-quoi">Ce que fait le site</h2>
+      <ul>
+        <li>Interface en persan/dari (écriture de droite à gauche) et en anglais.</li>
+        <li>
+          Fonctionne <strong>hors ligne</strong> (PWA, Service Worker) : parcours en unités, exercices, conjugaison, lexique,
+          glossaire, test de placement, examens blancs.
+        </li>
+        <li>Gratuit, de A1 à B2, avec la préparation du DELF.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="titre-captures">
+      <h2 id="titre-captures">Captures d’écran</h2>
+      <div class="captures">
+        {
+          captures.map((c) => (
+            <figure class:list={['capture', { 'capture--mobile': c.mobile }]}>
+              <Picture
+                src={c.src}
+                alt={c.alt}
+                formats={['avif']}
+                fallbackFormat="webp"
+                widths={c.mobile ? [390] : [640, 1280]}
+                sizes={c.mobile ? '390px' : '(min-width: 72rem) 36rem, 100vw'}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{c.legende}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+
+    <section aria-labelledby="titre-ou">
+      <h2 id="titre-ou">Où en est le projet</h2>
+      <ul>
+        <li>Niveau A1 rédigé : 13 unités (de l’unité 0 à l’unité 12).</li>
+        <li>Spécifications des niveaux A2, B1 et B2 écrites.</li>
+        <li>Plus de 150 pull requests.</li>
+        <li>Le contenu pédagogique est en cours de relecture : le site l’indique sur chaque unité.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="titre-technique">
+      <h2 id="titre-technique">Technique</h2>
+      <p>
+        SvelteKit, TypeScript et Vite. Tests avec Vitest et Playwright, contrôle d’accessibilité avec axe-core,
+        intégration continue avec GitHub Actions. Des scripts vérifient le contenu : schémas JSON, signature de relecture,
+        vérification des licences.
+      </p>
+      <ul class="puces" aria-label="Technologies">
+        {fransi.technologies.map((t) => <li class="puce">{t}</li>)}
+      </ul>
+    </section>
+
+    <section aria-labelledby="titre-methode" class="methode">
+      <h2 id="titre-methode">Méthode : avec un assistant IA</h2>
+      <p>
+        Je développe Fransi avec un assistant IA, <strong>Claude Code</strong>. Je l’encadre avec un processus strict :
+        branches, pull requests, journal des décisions, et <strong>relecture humaine obligatoire</strong> du contenu
+        pédagogique.
+      </p>
+    </section>
+
+    <section aria-labelledby="titre-acces">
+      <h2 id="titre-acces">Code et mise en ligne</h2>
+      <p>
+        Le dépôt est privé et le site n’est pas encore en ligne.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .fransi {
+    max-width: 52rem;
+    padding-block: var(--espace-5) var(--espace-6);
+  }
+
+  .fil {
+    margin-bottom: var(--espace-4);
+    font-size: var(--taille-0);
+  }
+
+  .fransi__entete {
+    margin-bottom: var(--espace-5);
+  }
+  .fransi__niveau {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+    margin-bottom: var(--espace-2);
+    color: var(--accent-texte);
+    font-size: var(--taille-0);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .badge {
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    font-family: var(--police-texte);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .fransi__sous-titre {
+    font-family: var(--police-titre);
+    font-size: var(--taille-3);
+    color: var(--accent-texte);
+  }
+  .fransi__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-3);
+    margin: 0 0 var(--espace-3);
+    padding: 0;
+    list-style: none;
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+  .fransi__meta li + li::before {
+    content: '·';
+    margin-right: var(--espace-3);
+  }
+  .fransi__resume {
+    font-size: var(--taille-2);
+  }
+
+  .fransi section {
+    margin-top: var(--espace-5);
+  }
+  .fransi section ul:not(.puces) {
+    padding-left: 1.2rem;
+  }
+  .fransi section li + li {
+    margin-top: var(--espace-1);
+  }
+
+  .captures {
+    display: grid;
+    gap: var(--espace-4);
+  }
+  @media (min-width: 45rem) {
+    .captures {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .capture {
+    margin: 0;
+  }
+  .capture :global(img) {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+  }
+  .capture--mobile :global(img) {
+    max-width: 16rem;
+  }
+  .capture figcaption {
+    margin-top: var(--espace-2);
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+
+  .methode {
+    padding: var(--espace-4);
+    border: 1px solid var(--accent);
+    border-radius: var(--rayon);
+    background: var(--surface);
+  }
+  .fransi .methode {
+    margin-top: var(--espace-5);
+  }
+</style>

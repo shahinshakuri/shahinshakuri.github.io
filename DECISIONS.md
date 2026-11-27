@@ -29,3 +29,17 @@ Les décisions importantes (niveau 3 du brief) sont validées par Shahin avant d
 | 1.11 | Workflow **`verifs.yml`** sur chaque pull request : `astro check` + build. Il ne publie rien. | Détecter une erreur avant la fusion. | Aucune vérification avant fusion. |
 | 1.12 | Télémétrie Astro **désactivée dans la CI** (`ASTRO_TELEMETRY_DISABLED`). | Pas d'envoi de données d'usage. En local, c'est un réglage de ta machine : à toi de choisir (`npx astro telemetry disable`). | — |
 | 1.13 | Node **24** en CI (`.nvmrc`), comme l'action officielle. | Version stable longue durée. | Node 26 (utilisé en local, fonctionne aussi). |
+
+## Phase 2 — Contenu (2026-11-27)
+
+| # | Choix | Raison | Alternative écartée |
+|---|---|---|---|
+| 2.1 | Paquet **sharp 0.35.5** (licence Apache-2.0), en dépendance de développement. *Validé par Shahin.* | Il optimise les images au moment du build et fabrique l'image d'aperçu `og.png`. | Images non optimisées. |
+| 2.2 | Images servies en **AVIF, avec du WebP en repli** (`<Picture>` d'Astro), en deux tailles. | Le dossier `dist/` passe de 3,7 Mo à 1,5 Mo. | Garder les PNG d'origine, beaucoup plus lourds. |
+| 2.3 | Captures de **Fransi** prises avec le script du projet, sur une **copie à part** du dépôt (dans un dossier temporaire). | Ne rien modifier ni commiter dans le dépôt Fransi. | Faire les captures directement dans le dépôt Fransi. |
+| 2.4 | L'image de Labyrinthe de l'ancien site (`lab1.png`) **n'est pas reprise**. Elle est remplacée par un **dessin SVG**, indiqué comme une illustration. | L'image semble venir du jeu de société officiel, pas du projet. | La reprendre telle quelle. |
+| 2.5 | Le lien vers l'ancien site de l'IUT **n'est pas affiché**. On écrit « Ce site n'est plus en ligne aujourd'hui. ». | L'adresse renvoie une erreur 404 et le dépôt d'origine n'existe plus (vérifié le 2026-11-27). | Laisser un lien cassé. |
+| 2.6 | Image d'aperçu des réseaux sociaux (`public/og.png`, 1200 × 630) **générée par un script** (`npm run og`) à partir de `profil.ts`. | Une seule source pour le nom et le titre, et pas de logiciel de dessin. | Image dessinée à la main. |
+| 2.7 | Marathon Web : **équipe de 3**. Licence pro : **IUT de Lens**. *Réponses de Shahin.* | Informations absentes du brief. | — |
+| 2.8 | Projets d'école présentés comme du **travail d'équipe**, **sans rôle individuel inventé**. Les noms des coéquipiers ne sont pas publiés, seulement la taille de l'équipe. | Règle du brief : « N'invente rien sur moi ». Les noms des autres personnes leur appartiennent. | Attribuer une partie précise du travail à Shahin. |
+| 2.9 | Compétences reliées aux projets et expériences par **des liens internes vérifiés au build** : une référence inconnue fait échouer la construction. | Pas de lien mort, et chaque compétence montre où elle a servi. | Liste de compétences sans lien. |

@@ -1,0 +1,75 @@
+---
+// Contact : e-mail (lien mailto + bouton « copier l'adresse »), LinkedIn, GitHub.
+// Pas de formulaire, pas de téléphone, pas de service tiers.
+import { profil } from '../data/profil';
+---
+
+<div class="contact">
+  <p class="contact__adresse">
+    <span class="contact__libelle">E-mail</span>
+    <a href={`mailto:${profil.email}`} class="mono">{profil.email}</a>
+  </p>
+
+  <div class="contact__actions">
+    <a class="bouton bouton--accent" href={`mailto:${profil.email}`}>M’écrire</a>
+    <button class="bouton besoin-js" type="button" data-copier={profil.email}>Copier l’adresse</button>
+  </div>
+  <p class="contact__retour" role="status" aria-live="polite" data-retour-copie></p>
+
+  <ul class="contact__reseaux">
+    <li>
+      <a href={profil.liens.linkedin} rel="me noopener">LinkedIn</a>
+    </li>
+    <li>
+      <a href={profil.liens.github} rel="me noopener">GitHub</a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  import { brancherCopie } from '../scripts/copier';
+  brancherCopie();
+</script>
+
+<style>
+  .contact {
+    max-width: 42rem;
+  }
+
+  .contact__adresse {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--espace-2) var(--espace-3);
+    font-size: var(--taille-2);
+  }
+  .contact__libelle {
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+  .contact__adresse a {
+    overflow-wrap: anywhere;
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-3);
+  }
+
+  .contact__retour {
+    min-height: 1.65em;
+    margin-top: var(--espace-2);
+    color: var(--accent-texte);
+    font-size: var(--taille-0);
+  }
+
+  .contact__reseaux {
+    display: flex;
+    gap: var(--espace-4);
+    margin: var(--espace-3) 0 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 600;
+  }
+</style>
