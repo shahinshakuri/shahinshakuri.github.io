@@ -1,0 +1,173 @@
+---
+// Mode terminal : une console qui s'ouvre avec la touche ² (ou ` / ~) ou le bouton >_ de l'en-tête.
+// Les données viennent des fichiers de src/data : rien n'est écrit en dur ici.
+// Sans JavaScript, rien ne s'affiche (le contenu reste lisible sur la page).
+import { profil } from '../data/profil';
+import { projets } from '../data/projets';
+import { competences } from '../data/competences';
+import type { DonneesTerminal } from '../lib/terminal';
+
+const donnees: DonneesTerminal = {
+  profil: {
+    nom: profil.nom,
+    titre: profil.titre,
+    accroche: profil.accroche,
+    localisation: profil.localisation,
+    email: profil.email,
+    linkedin: profil.liens.linkedin,
+    github: profil.liens.github,
+  },
+  projets: projets.map(({ slug, titre, annee, contexte, enCours }) => ({ slug, titre, annee, contexte, enCours })),
+  competences: competences.map((g) => ({ groupe: g.groupe, noms: g.competences.map((c) => c.nom) })),
+};
+// « < » échappé : le texte ne peut pas fermer la balise <script> par accident.
+const json = JSON.stringify(donnees).replace(/</g, '\\u003c');
+---
+
+<dialog class="terminal" data-terminal aria-labelledby="terminal-titre">
+  <div class="terminal__barre">
+    <h2 id="terminal-titre" class="terminal__titre mono">labo — terminal</h2>
+    <button type="button" class="terminal__fermer" data-terminal-fermer aria-label="Fermer le terminal">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </div>
+  <div class="terminal__sortie mono" role="log" aria-live="polite" data-terminal-sortie></div>
+  <form class="terminal__formulaire mono" data-terminal-formulaire>
+    <label for="terminal-champ" class="visuellement-cache">Commande (tapez help pour la liste)</label>
+    <span class="terminal__invite" aria-hidden="true">&gt;</span>
+    <input
+      id="terminal-champ"
+      class="terminal__champ"
+      type="text"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      enterkeyhint="send"
+      data-terminal-champ
+    />
+  </form>
+</dialog>
+
+<script type="application/json" id="donnees-terminal" set:html={json} />
+
+<script>
+  import { brancherTerminal } from '../scripts/terminal';
+  brancherTerminal();
+</script>
+
+<style>
+  .terminal {
+    --terminal-erreur: #ff9b8f;
+    width: min(44rem, calc(100vw - 2rem));
+    max-height: min(32rem, calc(100dvh - 2rem));
+    padding: 0;
+    border: 1px solid var(--bordure-forte);
+    border-radius: var(--rayon-grand);
+    background: var(--surface);
+    color: var(--texte);
+    box-shadow: var(--ombre);
+  }
+  :global(:root[data-theme='light']) .terminal {
+    --terminal-erreur: #b3261e;
+  }
+  .terminal[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .terminal::backdrop {
+    background: rgb(0 0 0 / 0.55);
+  }
+
+  .terminal__barre {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--espace-1) var(--espace-1) var(--espace-1) var(--espace-4);
+    border-bottom: 1px solid var(--bordure);
+    background: var(--surface-2);
+  }
+  .terminal__titre {
+    margin: 0;
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+    font-weight: 500;
+  }
+  .terminal__fermer {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: var(--rayon);
+    background: transparent;
+    color: var(--texte);
+    cursor: pointer;
+  }
+  .terminal__fermer:hover {
+    background: var(--surface);
+  }
+  .terminal__fermer svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .terminal__sortie {
+    flex: 1;
+    min-height: 12rem;
+    overflow-y: auto;
+    padding: var(--espace-3) var(--espace-4);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .terminal__sortie :global(.terminal__ligne) {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .terminal__sortie :global(.terminal__commande) {
+    margin-top: var(--espace-2);
+  }
+  .terminal__sortie :global(.terminal__accent) {
+    color: var(--accent-texte);
+  }
+  .terminal__sortie :global(.terminal__doux) {
+    color: var(--texte-doux);
+  }
+  .terminal__sortie :global(.terminal__erreur) {
+    color: var(--terminal-erreur);
+  }
+  .terminal__sortie :global(a) {
+    color: var(--texte);
+  }
+
+  .terminal__formulaire {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+    padding: var(--espace-2) var(--espace-4);
+    border-top: 1px solid var(--bordure);
+  }
+  .terminal__invite {
+    color: var(--accent-texte);
+  }
+  .terminal__champ {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: var(--texte);
+    font: inherit;
+    font-size: 1rem; /* 16 px : évite le zoom automatique sur iPhone */
+  }
+  .terminal__champ:focus {
+    outline: none;
+  }
+  .terminal__formulaire:focus-within {
+    box-shadow: inset 0 2px 0 var(--accent);
+  }
+</style>

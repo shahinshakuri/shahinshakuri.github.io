@@ -6,6 +6,7 @@ import '../styles/global.css';
 
 import EnTete from '../components/EnTete.astro';
 import PiedDePage from '../components/PiedDePage.astro';
+import Terminal from '../components/Terminal.astro';
 import { profil } from '../data/profil';
 import { ui } from '../i18n/fr';
 
@@ -83,6 +84,7 @@ const imageApercu = new URL('/og.png', Astro.site).href;
       <slot />
     </main>
     <PiedDePage />
+    <Terminal />
     <script>
       import '../scripts/preferences';
     </script>

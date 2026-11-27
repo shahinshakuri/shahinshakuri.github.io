@@ -1,0 +1,283 @@
+---
+// Mini-Sokoban jouable (clavier + boutons tactiles). Utilisé sur /jeux/sokoban/ et sur la page 404.
+import { niveauxSokoban } from '../data/niveaux-sokoban';
+
+interface Props {
+  /** Identifiant unique sur la page (pour relier les libellés). */
+  id?: string;
+}
+const { id = 'sokoban' } = Astro.props;
+---
+
+<div class="sokoban" data-sokoban>
+  <p class="sokoban__sans-js">Le jeu a besoin de JavaScript pour fonctionner.</p>
+
+  <div class="sokoban__jeu besoin-js">
+    <p class="sokoban__aide" id={`${id}-aide`}>
+      <!-- Une seule ligne : Astro supprime les retours à la ligne collés à une balise (« lesflèches »). -->
+      Poussez chaque caisse sur une cible (les cercles). Cliquez sur le plateau, puis jouez avec les <kbd>flèches</kbd> ou <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd>. <kbd>U</kbd> annule le dernier coup, <kbd>R</kbd> recommence le niveau. Sur téléphone, utilisez les boutons sous le plateau.
+    </p>
+
+    <div class="sokoban__barre">
+      <label class="sokoban__choix">
+        Niveau
+        <select data-choix-niveau>
+          {niveauxSokoban.map((n, i) => <option value={i}>{`${i + 1}. ${n.nom}`}</option>)}
+        </select>
+      </label>
+      <p class="sokoban__compteur mono" data-compteur></p>
+    </div>
+
+    <div class="sokoban__cadre">
+      <div
+        class="sokoban__plateau"
+        data-plateau
+        tabindex="0"
+        role="application"
+        aria-label="Plateau du Sokoban"
+        aria-describedby={`${id}-aide`}
+      >
+      </div>
+    </div>
+
+    <div class="sokoban__victoire" data-victoire hidden>
+      <p data-texte-victoire></p>
+      <button type="button" class="bouton bouton--accent" data-suivant>Niveau suivant</button>
+    </div>
+
+    <div class="sokoban__commandes">
+      <div class="sokoban__croix" role="group" aria-label="Déplacements">
+        <button type="button" class="bouton sokoban__fleche sokoban__fleche--haut" data-direction="haut" aria-label="Haut">↑</button>
+        <button type="button" class="bouton sokoban__fleche sokoban__fleche--gauche" data-direction="gauche" aria-label="Gauche">←</button>
+        <button type="button" class="bouton sokoban__fleche sokoban__fleche--bas" data-direction="bas" aria-label="Bas">↓</button>
+        <button type="button" class="bouton sokoban__fleche sokoban__fleche--droite" data-direction="droite" aria-label="Droite">→</button>
+      </div>
+      <div class="sokoban__actions">
+        <button type="button" class="bouton bouton--petit" data-annuler>Annuler le coup</button>
+        <button type="button" class="bouton bouton--petit" data-recommencer>Recommencer</button>
+      </div>
+    </div>
+
+    <p class="visuellement-cache" role="status" data-annonce></p>
+  </div>
+</div>
+
+<script>
+  import { brancherSokoban } from '../scripts/sokoban';
+  document.querySelectorAll<HTMLElement>('[data-sokoban]').forEach(brancherSokoban);
+</script>
+
+<style>
+  .sokoban {
+    --caisse: #d9a441;
+    --caisse-bord: #8a6420;
+    container-type: inline-size;
+  }
+  :global(:root[data-theme='light']) .sokoban {
+    --caisse: #e0b45a;
+    --caisse-bord: #7a5512;
+  }
+
+  .sokoban__sans-js {
+    color: var(--texte-doux);
+  }
+  :global(.js) .sokoban__sans-js {
+    display: none;
+  }
+
+  .sokoban__aide {
+    max-width: 42rem;
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+  kbd {
+    display: inline-block;
+    min-width: 1.6em;
+    margin-inline: 0.1em;
+    padding: 0 0.35em;
+    border: 1px solid var(--bordure-forte);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    background: var(--surface);
+    color: var(--texte);
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .sokoban__barre {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espace-2) var(--espace-4);
+    margin-bottom: var(--espace-3);
+  }
+  .sokoban__choix {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+    font-weight: 600;
+  }
+  .sokoban__choix select {
+    min-height: 2.5rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--bordure-forte);
+    border-radius: var(--rayon);
+    background: var(--surface);
+    color: var(--texte);
+    font: inherit;
+    font-weight: 400;
+  }
+  .sokoban__compteur {
+    margin: 0;
+    color: var(--texte-doux);
+  }
+  .sokoban__compteur :global(span) {
+    white-space: nowrap;
+  }
+
+  /* ---- Plateau ---- */
+  .sokoban__cadre {
+    display: flex;
+    justify-content: center;
+    padding: var(--espace-4);
+    border: 1px solid var(--bordure);
+    border-radius: calc(var(--rayon) * 2);
+    background: var(--surface);
+  }
+  .sokoban__plateau {
+    --case: min(3.25rem, calc((100cqi - 3rem) / var(--colonnes, 8)));
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--colonnes, 8), var(--case));
+    grid-template-rows: repeat(var(--lignes, 6), var(--case));
+    border-radius: 6px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .sokoban__plateau:focus-visible {
+    outline-offset: 8px;
+  }
+  .sokoban__plateau :global(.sokoban__pieces) {
+    display: contents;
+  }
+
+  .sokoban__plateau :global(.sokoban__case--mur) {
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--bordure-forte);
+    border-radius: 3px;
+  }
+  .sokoban__plateau :global(.sokoban__case--sol),
+  .sokoban__plateau :global(.sokoban__case--cible) {
+    background: var(--fond);
+  }
+  /* Cible : un anneau */
+  .sokoban__plateau :global(.sokoban__case--cible)::after {
+    content: '';
+    display: block;
+    width: 44%;
+    height: 44%;
+    margin: 28%;
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+  }
+
+  /* Caisse : carré avec une croix ; placée sur une cible : verte avec une coche */
+  .sokoban__plateau :global(.sokoban__caisse) {
+    z-index: 1;
+    margin: 10%;
+    border: 3px solid var(--caisse-bord);
+    border-radius: 4px;
+    background:
+      linear-gradient(45deg, transparent 46%, var(--caisse-bord) 46% 54%, transparent 54%),
+      linear-gradient(-45deg, transparent 46%, var(--caisse-bord) 46% 54%, transparent 54%),
+      var(--caisse);
+  }
+  .sokoban__plateau :global(.sokoban__caisse--placee) {
+    border-color: var(--accent);
+    background: var(--accent);
+    display: grid;
+    place-items: center;
+  }
+  .sokoban__plateau :global(.sokoban__caisse--placee)::after {
+    content: '';
+    width: 45%;
+    height: 25%;
+    margin-top: -10%;
+    border-left: 4px solid var(--sur-accent);
+    border-bottom: 4px solid var(--sur-accent);
+    transform: rotate(-45deg);
+  }
+
+  /* Joueur : un petit robot de labo */
+  .sokoban__plateau :global(.sokoban__joueur) {
+    z-index: 2;
+    margin: 14%;
+    border: 3px solid var(--accent);
+    border-radius: 50% 50% 35% 35%;
+    background:
+      radial-gradient(circle at 35% 42%, var(--accent) 0 9%, transparent 10%),
+      radial-gradient(circle at 65% 42%, var(--accent) 0 9%, transparent 10%),
+      var(--surface);
+  }
+
+  /* ---- Victoire ---- */
+  .sokoban__victoire {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espace-3);
+    margin-top: var(--espace-3);
+    padding: var(--espace-3) var(--espace-4);
+    border: 1px solid var(--accent);
+    border-radius: var(--rayon);
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  }
+  .sokoban__victoire[hidden] {
+    display: none;
+  }
+  .sokoban__victoire p {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  /* ---- Commandes tactiles ---- */
+  .sokoban__commandes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espace-4);
+    margin-top: var(--espace-4);
+  }
+  .sokoban__croix {
+    display: grid;
+    grid-template-columns: repeat(3, 3rem);
+    grid-template-rows: repeat(2, 3rem);
+    gap: var(--espace-1);
+  }
+  .sokoban__fleche {
+    justify-content: center;
+    min-height: 0;
+    padding: 0;
+    font-size: 1.25rem;
+    touch-action: manipulation;
+  }
+  .sokoban__fleche--haut {
+    grid-area: 1 / 2;
+  }
+  .sokoban__fleche--gauche {
+    grid-area: 2 / 1;
+  }
+  .sokoban__fleche--bas {
+    grid-area: 2 / 2;
+  }
+  .sokoban__fleche--droite {
+    grid-area: 2 / 3;
+  }
+  .sokoban__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-2);
+  }
+</style>

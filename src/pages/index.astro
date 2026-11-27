@@ -8,12 +8,16 @@ import SectionCompetences from '../components/SectionCompetences.astro';
 import SectionContact from '../components/SectionContact.astro';
 import SectionExperience from '../components/SectionExperience.astro';
 import SectionFormation from '../components/SectionFormation.astro';
+import Avatar from '../components/Avatar.astro';
+import FiltresProjets from '../components/FiltresProjets.astro';
 ---
 
 <Base accueil>
-  <section id="accueil" class="accueil" aria-labelledby="titre-accueil">
-    <!-- Décor « papier millimétré » : remplacé par la fractale vivante en phase 3, masqué en mode sobre. -->
+  <section id="accueil" class="accueil" aria-labelledby="titre-accueil" data-fractale>
+    <!-- Décor : quadrillage + fractale vivante (src/scripts/fractale.ts). Masqué en mode sobre. -->
     <div class="accueil__decor deco" aria-hidden="true"></div>
+    <canvas class="accueil__fractale deco" data-fractale-canvas aria-hidden="true"></canvas>
+    <div class="accueil__avatar deco" aria-hidden="true"><Avatar taille={132} /></div>
 
     <div class="conteneur accueil__contenu">
       <p class="accueil__invite mono" aria-hidden="true">
@@ -27,6 +31,13 @@ import SectionFormation from '../components/SectionFormation.astro';
         <a class="bouton bouton--accent" href={`mailto:${profil.email}`}>M’écrire</a>
         <a class="bouton" href="#projets">Voir mes projets</a>
       </div>
+    </div>
+
+    <div class="conteneur accueil__commandes ludique besoin-js" role="group" aria-label="Fractale du fond">
+      <button type="button" class="bouton bouton--petit" data-fractale-figer aria-pressed="false">Figer</button>
+      <button type="button" class="bouton bouton--petit" data-fractale-palette>
+        <span>Palette : <span data-fractale-nom-palette>Vert</span></span>
+      </button>
     </div>
   </section>
 
@@ -45,10 +56,11 @@ import SectionFormation from '../components/SectionFormation.astro';
       <p class="section__intro">
         Chaque projet est un niveau, du plus récent au plus ancien. Les projets d’école ont été réalisés en équipe.
       </p>
-      <ol class="niveaux" role="list">
+      <FiltresProjets />
+      <ol class="niveaux" role="list" data-niveaux>
         {
           projets.map((projet, i) => (
-            <li>
+            <li data-technos={JSON.stringify(projet.technologies)}>
               <CarteProjet projet={projet} niveau={i + 1} />
             </li>
           ))
@@ -83,6 +95,12 @@ import SectionFormation from '../components/SectionFormation.astro';
   </section>
 </Base>
 
+<script>
+  import { demarrerFractale } from '../scripts/fractale';
+  const accueil = document.querySelector<HTMLElement>('[data-fractale]');
+  if (accueil) demarrerFractale(accueil);
+</script>
+
 <style>
   .accueil {
     position: relative;
@@ -101,6 +119,55 @@ import SectionFormation from '../components/SectionFormation.astro';
       linear-gradient(90deg, var(--quadrillage) 1px, transparent 1px);
     background-size: 32px 32px;
     mask-image: radial-gradient(ellipse 80% 70% at 70% 40%, #000 30%, transparent 80%);
+  }
+
+  /* Fractale : à droite du texte sur grand écran, en fond très léger sur mobile.
+     Le dégradé (mask) garde le texte lisible. Rien n'apparaît tant que WebGL n'est pas prêt. */
+  .accueil__fractale,
+  .accueil__avatar,
+  .accueil__commandes {
+    display: none;
+  }
+  .accueil:global(.fractale--prete) .accueil__fractale {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  }
+  .accueil:global(.fractale--prete) .accueil__commandes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-2);
+    margin-top: var(--espace-5);
+  }
+  @media (min-width: 60rem) {
+    .accueil:global(.fractale--prete) .accueil__fractale {
+      opacity: 1;
+      mask-image: linear-gradient(to right, transparent 30%, #000 62%);
+    }
+    .accueil:global(.fractale--prete) .accueil__avatar {
+      display: block;
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      left: 74%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 28px var(--fond));
+    }
+    .accueil:global(.fractale--prete) .accueil__commandes {
+      position: absolute;
+      inset-inline: 0;
+      bottom: var(--espace-4);
+      justify-content: flex-end;
+      margin-top: 0;
+    }
+    .accueil__accroche {
+      max-width: 34rem;
+    }
   }
 
   .accueil__contenu {

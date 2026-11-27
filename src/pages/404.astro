@@ -1,15 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
-// TODO(phase 3) : mini-jeu Sokoban jouable sur cette page.
+import Sokoban from '../components/Sokoban.astro';
 ---
 
 <Base titre="Page introuvable" description="Cette page n'existe pas.">
   <section class="section">
-    <div class="conteneur">
+    <div class="conteneur page-404">
       <span class="section__etiquette">erreur 404</span>
       <h1>Niveau introuvable</h1>
       <p class="section__intro">Cette page n’existe pas (ou plus). Le reste du labo est toujours ouvert.</p>
-      <p><a class="bouton bouton--accent" href="/">Retour à l’accueil</a></p>
+      <p class="page-404__actions">
+        <a class="bouton bouton--accent" href="/">Retour à l’accueil</a>
+        <a class="bouton" href="/#projets">Voir les projets</a>
+      </p>
+
+      <!-- Le jeu est masqué en mode sobre ; le lien vers /jeux/sokoban/ reste. -->
+      <div class="page-404__jeu ludique">
+        <h2>En attendant, une partie de Sokoban ?</h2>
+        <Sokoban id="sokoban-404" />
+      </div>
+      <p class="page-404__lien-jeu">
+        <a href="/jeux/sokoban/">Jouer au Sokoban sur sa propre page</a>
+      </p>
     </div>
   </section>
 </Base>
+
+<style>
+  .page-404 {
+    max-width: 48rem;
+  }
+  .page-404__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-3);
+  }
+  .page-404__jeu {
+    margin-top: var(--espace-6);
+  }
+  .page-404__lien-jeu {
+    margin-top: var(--espace-4);
+    font-size: var(--taille-0);
+  }
+</style>

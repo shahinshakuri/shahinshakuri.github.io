@@ -239,3 +239,15 @@ kbd,
   font-family: var(--police-mono);
   font-size: 0.8rem;
 }
+
+/* Petit bouton (commandes secondaires : fractale, filtres, jeu) */
+.bouton--petit {
+  min-height: 2.25rem;
+  padding: 0.3rem 0.8rem;
+  font-size: var(--taille-0);
+  font-weight: 500;
+}
+.bouton[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+}

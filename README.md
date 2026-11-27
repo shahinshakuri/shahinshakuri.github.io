@@ -16,6 +16,7 @@ npm run dev        # site de travail sur http://localhost:4321, mis à jour à c
 npm run build      # fabrique le site final dans dist/
 npm run preview    # affiche le site final (dist/) sur http://localhost:4321
 npm run check      # vérifie le code TypeScript et Astro
+npm test           # lance les tests automatiques (Vitest)
 ```
 
 ## Où modifier quoi
@@ -28,10 +29,19 @@ npm run check      # vérifie le code TypeScript et Astro
 | Ajouter ou modifier un projet | `src/data/projets.ts` (images dans `src/assets/projets/`) |
 | Modifier une expérience, la formation, les compétences | `src/data/experiences.ts`, `src/data/formation.ts`, `src/data/competences.ts` |
 | Refaire l’image d’aperçu des réseaux sociaux (après un changement de nom ou de titre) | `npm run og` → `public/og.png` |
+| Modifier ou ajouter un niveau du Sokoban (puis lancer `npm test` : il vérifie que le niveau a une solution) | `src/data/niveaux-sokoban.ts` |
+| Changer les commandes du mode terminal | `src/lib/terminal.ts` |
+| Régler la fractale (couleurs des palettes, forme, vitesse) | `src/scripts/fractale.ts` |
+
+## Raccourcis du site
+
+- `²` (ou `` ` `` / `~` sur un clavier anglais) ou le bouton `>_` : ouvre le mode terminal. `Échap` le ferme.
+- Le mode terminal, la fractale et le Sokoban de la page 404 sont masqués en **mode sobre**.
+  La page `/jeux/sokoban/` reste jouable dans tous les cas.
 
 ## Mise en ligne
 
 Chaque push sur `main` lance `.github/workflows/deploy.yml`, qui construit le site et le publie sur GitHub Pages.
 Réglage nécessaire une seule fois : *Settings → Pages → Build and deployment → Source : GitHub Actions*.
 
-Chaque pull request lance `.github/workflows/verifs.yml` (vérification des types et build), sans rien publier.
+Chaque pull request lance `.github/workflows/verifs.yml` (vérification des types, tests et build), sans rien publier.

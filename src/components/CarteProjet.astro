@@ -56,11 +56,16 @@ const idTitre = `titre-projet-${projet.slug}`;
     </ul>
 
     {
-      (projet.page || projet.depot) && (
+      (projet.page || projet.essai || projet.depot) && (
         <div class="carte__actions">
           {projet.page && (
             <a class="bouton bouton--accent" href={projet.page}>
               Voir le projet en détail
+            </a>
+          )}
+          {projet.essai && (
+            <a class="bouton bouton--accent" href={projet.essai}>
+              Essayer la version web
             </a>
           )}
           {projet.depot && (

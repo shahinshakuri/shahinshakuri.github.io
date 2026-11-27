@@ -31,6 +31,8 @@ export interface Projet {
   note?: string;
   /** Page détaillée sur ce site. */
   page?: string;
+  /** Version jouable ou démo sur ce site. */
+  essai?: string;
   image?: { src: ImageMetadata; alt: string };
   /** Dessin à la place d'une capture quand il n'y en a pas d'utilisable. */
   illustration?: 'labyrinthe';
@@ -112,7 +114,7 @@ export const projets: Projet[] = [
       'Code découpé en Modèle / Vue / Contrôleur (architecture MVC).',
       '5 niveaux, des sprites et des sons, avec des pièges à pics et des téléporteurs.',
     ],
-    // TODO(phase 3) : bouton « Essayer la version web » vers /jeux/sokoban/.
+    essai: '/jeux/sokoban/',
     depot: 'https://github.com/shahinshakuri/Sokoban-Project',
     image: {
       src: imgSokoban,

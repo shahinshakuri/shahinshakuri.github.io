@@ -44,6 +44,17 @@ const prefixe = accueil ? '' : '/';
 
       <button
         type="button"
+        class="bouton-icone bouton-icone--terminal mono ludique"
+        data-ouvrir-terminal
+        aria-label="Ouvrir le terminal"
+        aria-keyshortcuts="²"
+        title="Ouvrir le terminal (touche ²)"
+      >
+        <span aria-hidden="true">&gt;_</span>
+      </button>
+
+      <button
+        type="button"
         class="bouton-icone"
         data-action="theme"
         aria-label={ui.theme.versClair}
@@ -189,6 +200,11 @@ const prefixe = accueil ? '' : '/';
   }
   .bouton-icone:hover {
     border-color: var(--accent);
+  }
+  .bouton-icone--terminal {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-texte);
   }
   .icone {
     width: 1.2rem;

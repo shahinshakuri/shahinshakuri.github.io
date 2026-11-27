@@ -26,5 +26,7 @@ jobs:
         run: npm ci
       - name: Vérifier les types (astro check)
         run: npm run check
+      - name: Lancer les tests (Vitest)
+        run: npm test
       - name: Construire le site
         run: npm run build
