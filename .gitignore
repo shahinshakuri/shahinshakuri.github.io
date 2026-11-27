@@ -1,0 +1,15 @@
+# Dépendances et fichiers générés : jamais versionnés
+node_modules/
+vendor/
+dist/
+.astro/
+
+# Secrets et réglages locaux
+.env
+.env.*
+!.env.example
+
+# Divers
+npm-debug.log*
+.DS_Store
+Thumbs.db

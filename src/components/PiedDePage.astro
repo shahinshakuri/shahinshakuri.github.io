@@ -1,0 +1,48 @@
+---
+import { profil } from '../data/profil';
+import { ui } from '../i18n/fr';
+
+// Année calculée au moment du build (plus de « © 2022 » figé).
+const annee = new Date().getFullYear();
+---
+
+<footer class="pied">
+  <div class="conteneur pied__ligne">
+    <p>© {annee} {profil.nom}. {ui.piedDePage.fait}</p>
+    <ul class="pied__liens">
+      <li><a href={`mailto:${profil.email}`}>E-mail</a></li>
+      <li><a href={profil.liens.linkedin} rel="me noopener">LinkedIn</a></li>
+      <li><a href={profil.liens.github} rel="me noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .pied {
+    border-top: 1px solid var(--bordure);
+    padding-block: var(--espace-5);
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+  .pied__ligne {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espace-3);
+  }
+  .pied p {
+    margin: 0;
+  }
+  .pied__liens {
+    display: flex;
+    gap: var(--espace-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pied__liens a {
+    display: inline-block;
+    padding-block: var(--espace-2);
+  }
+</style>

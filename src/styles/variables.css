@@ -1,0 +1,63 @@
+/* Piste A « Labo nocturne » — contrastes vérifiés (AA) le 2026-11-27, voir DECISIONS.md */
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --fond: #0d1117;
+  --surface: #151b23;
+  --surface-2: #1c242e;
+  --texte: #e6edf3;
+  --texte-doux: #9aa7b4; /* 7,7:1 sur le fond */
+  --accent: #3df5a0; /* 13,3:1 sur le fond */
+  --accent-texte: #3df5a0; /* accent utilisé pour du texte */
+  --sur-accent: #0d1117; /* texte posé sur un bouton accent */
+  --bordure: #2a323c; /* décorative */
+  --bordure-forte: #6b7785; /* contrôles : ≥ 3:1 */
+  --ombre: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px rgb(0 0 0 / 0.35);
+  --quadrillage: rgb(61 245 160 / 0.06);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --fond: #f7f8f5;
+  --surface: #ffffff;
+  --surface-2: #eef0ec;
+  --texte: #14181d;
+  --texte-doux: #4f5a65; /* 6,6:1 sur le fond */
+  --accent: #0a7a4b; /* 5,1:1 sur le fond */
+  --accent-texte: #0a7a4b;
+  --sur-accent: #ffffff;
+  --bordure: #dde1dc;
+  --bordure-forte: #6f7a84;
+  --ombre: 0 1px 2px rgb(20 24 29 / 0.06), 0 8px 24px rgb(20 24 29 / 0.08);
+  --quadrillage: rgb(10 122 75 / 0.07);
+}
+
+:root {
+  --police-titre: 'Space Grotesk Variable', system-ui, sans-serif;
+  --police-texte: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --police-mono: 'JetBrains Mono Variable', ui-monospace, Menlo, Consolas, monospace;
+
+  --taille-0: 0.875rem;
+  --taille-1: 1rem;
+  --taille-2: 1.125rem;
+  --taille-3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --taille-4: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+  --taille-5: clamp(2.2rem, 1.6rem + 3vw, 4rem);
+
+  --espace-1: 0.25rem;
+  --espace-2: 0.5rem;
+  --espace-3: 1rem;
+  --espace-4: 1.5rem;
+  --espace-5: 2.5rem;
+  --espace-6: 4rem;
+  --espace-7: 6rem;
+
+  --rayon: 10px;
+  --rayon-grand: 16px;
+  --largeur: 72rem;
+  --hauteur-entete: 4rem;
+
+  --duree: 180ms;
+  --courbe: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
