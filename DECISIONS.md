@@ -79,3 +79,11 @@ Les décisions importantes (niveau 3 du brief) sont validées par Shahin avant d
 | 5.1 | Ancien site **supprimé** : `index.html`, `assets/css`, `assets/fonts`, `assets/js`, `vendor/` (3 730 fichiers PHP) et `composer.json` / `composer.lock`. **`assets/images/` est gardé**. *Choix de Shahin.* | Le nouveau site ne s'en sert pas. Tout reste récupérable dans l'historique Git. | Tout garder, ou tout supprimer images comprises. |
 | 5.2 | `assets/images/` (à la racine) **n'est pas publié** : seul le dossier `dist/` construit par Astro part sur GitHub Pages. Les images du nouveau site sont dans `src/assets/`. | Garder les anciennes images comme archive sans les mettre en ligne. | — |
 | 5.3 | GitHub Pages passe de la source « branche main » (ancien mode) à la source **GitHub Actions** (`deploy.yml`), **au moment de la fusion**. *Changement fait par Claude avec `gh`, à la demande de Shahin.* | Le nouveau site doit être construit avant d'être publié. Changer avant la fusion ne casse rien, mais changer bien après laisserait GitHub publier les fichiers bruts de `main`. | — |
+
+## Après la mise en ligne — TODO de contenu (2026-11-28)
+
+| # | Choix | Raison | Alternative écartée |
+|---|---|---|---|
+| 6.1 | Refonte du site de l'IUT : le site du binôme répond toujours 404. La mention « Ce site n'est plus en ligne aujourd'hui » est **gardée, sans lien**. *Choix de Shahin.* | Ne pas afficher de lien mort. | Retirer la mention. |
+| 6.2 | « SQL / PL/pgSQL » n'est **plus relié** à Marathon Web. *Choix de Shahin.* | Marathon Web utilisait MySQL : le lien laissait croire à du PL/pgSQL dans ce projet. | Garder le lien. |
+| 6.3 | « Linux » est **relié à Fractals Generator** (scripts bash). Les autres compétences sans projet (PostgreSQL, JavaScript, React / Next.js, Angular, Flask, Tailwind CSS, GitLab, bases réseau, Word, Excel) restent **listées sans lien**. *Choix de Shahin.* | Ne relier une compétence qu'à un projet où elle a vraiment servi. | Inventer des liens. |

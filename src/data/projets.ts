@@ -142,8 +142,7 @@ export const projets: Projet[] = [
     technologies: ['HTML/CSS'],
     resume: 'Nouvelle version du site de l’IUT, écrite en HTML et CSS.',
     points: ['Projet en binôme : le site était hébergé sur le compte GitHub de mon binôme.'],
-    // TODO(Shahin) : le lien https://habiberfani.github.io/premier/index.html renvoie une erreur 404
-    // (vérifié le 2026-11-27). Remettre un lien ici seulement s'il fonctionne de nouveau.
+    // Le site du binôme (https://habiberfani.github.io/premier/) répond 404 (vérifié le 2026-11-28) : mention gardée, sans lien.
     note: 'Ce site n’est plus en ligne aujourd’hui.',
     depot: null,
     image: {
