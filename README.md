@@ -56,4 +56,6 @@ npm run lighthouse -- --ludique   # idem en mode ludique (ajouter --mobile pour 
 Chaque push sur `main` lance `.github/workflows/deploy.yml`, qui construit le site et le publie sur GitHub Pages.
 Réglage nécessaire une seule fois : *Settings → Pages → Build and deployment → Source : GitHub Actions*.
 
-Chaque pull request lance `.github/workflows/verifs.yml` (vérification des types, tests et build), sans rien publier.
+Chaque pull request lance `.github/workflows/verifs.yml` (types, tests, build, orthographe, liens, accessibilité, Lighthouse), sans rien publier.
+
+Le dossier `assets/images/` à la racine contient les images de l’ancien site, gardées comme archive : il n’est pas publié.

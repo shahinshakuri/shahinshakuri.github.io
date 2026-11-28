@@ -71,3 +71,11 @@ Les décisions importantes (niveau 3 du brief) sont validées par Shahin avant d
 | 4.5 | Orthographe : cspell en **français + anglais** sur `src/`, le README et ce fichier. Les noms propres, les termes techniques et les noms de variables sans accents (`annee`, `diplome`…) sont listés dans `cspell.config.yaml`. | Repérer les fautes dans les textes. Aucune faute réelle trouvée dans les textes visibles. | — |
 | 4.6 | Lighthouse avec le Chromium de Playwright, en **mode sobre** (Chrome reçoit `--force-prefers-reduced-motion`), version ordinateur : le script échoue sous **90**. La 404 est mesurée par son fichier `/404.html`, car Lighthouse refuse une page qui répond « 404 ». | Objectif du brief. Le mode sobre est celui que le brief demande de mesurer. | Lighthouse en ligne (PageSpeed) : service tiers. |
 | 4.7 | Le navigateur des tests est le Chromium « headless shell » par défaut de Playwright. | Sur l'ordinateur de Shahin, le Chromium complet téléchargé par Playwright ne se lance pas (« Permission denied ») ; le headless shell fonctionne. | Chromium complet (`channel: 'chromium'`). |
+
+## Phase 5 — Mise en ligne (2026-11-28)
+
+| # | Choix | Raison | Alternative écartée |
+|---|---|---|---|
+| 5.1 | Ancien site **supprimé** : `index.html`, `assets/css`, `assets/fonts`, `assets/js`, `vendor/` (3 730 fichiers PHP) et `composer.json` / `composer.lock`. **`assets/images/` est gardé**. *Choix de Shahin.* | Le nouveau site ne s'en sert pas. Tout reste récupérable dans l'historique Git. | Tout garder, ou tout supprimer images comprises. |
+| 5.2 | `assets/images/` (à la racine) **n'est pas publié** : seul le dossier `dist/` construit par Astro part sur GitHub Pages. Les images du nouveau site sont dans `src/assets/`. | Garder les anciennes images comme archive sans les mettre en ligne. | — |
+| 5.3 | GitHub Pages passe de la source « branche main » (ancien mode) à la source **GitHub Actions** (`deploy.yml`), **au moment de la fusion**. *Changement fait par Claude avec `gh`, à la demande de Shahin.* | Le nouveau site doit être construit avant d'être publié. Changer avant la fusion ne casse rien, mais changer bien après laisserait GitHub publier les fichiers bruts de `main`. | — |
