@@ -1,5 +1,5 @@
 # Vérifications sur chaque pull request (ne publie rien).
-# Phase 4 : ajout de la recherche de liens cassés et du contrôle d'accessibilité.
+# Contrôles : types, tests, construction, orthographe, liens, accessibilité (axe), Lighthouse.
 name: Vérifications
 
 on:
@@ -30,3 +30,13 @@ jobs:
         run: npm test
       - name: Construire le site
         run: npm run build
+      - name: Vérifier l'orthographe (cspell)
+        run: npm run orthographe
+      - name: Chercher les liens cassés dans le site (linkinator)
+        run: npm run liens
+      - name: Installer le navigateur des tests (Chromium)
+        run: npx playwright install --with-deps chromium
+      - name: Tester dans le navigateur (accessibilité, mobile, clavier, sans JavaScript)
+        run: npm run test:e2e
+      - name: Mesurer avec Lighthouse en mode sobre (note minimale 90)
+        run: npm run lighthouse

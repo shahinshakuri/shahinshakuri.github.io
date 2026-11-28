@@ -19,6 +19,18 @@ npm run check      # vérifie le code TypeScript et Astro
 npm test           # lance les tests automatiques (Vitest)
 ```
 
+Contrôles de qualité (après `npm run build`) :
+
+```sh
+npx playwright install chromium   # une seule fois : le navigateur des tests
+npm run test:e2e                  # accessibilité (axe), mobile 360 px, clavier, sans JavaScript
+npm run liens                     # liens cassés dans dist/ (liens internes)
+npm run liens:externes            # idem, avec les liens vers les autres sites (plus lent)
+npm run orthographe               # fautes dans les textes (cspell) ; mots acceptés : cspell.config.yaml
+npm run lighthouse                # notes Lighthouse en mode sobre (échoue sous 90)
+npm run lighthouse -- --ludique   # idem en mode ludique (ajouter --mobile pour un téléphone)
+```
+
 ## Où modifier quoi
 
 | Je veux… | Fichier |

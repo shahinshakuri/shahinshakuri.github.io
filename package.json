@@ -13,6 +13,11 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
+    "test:e2e": "playwright test",
+    "liens": "linkinator dist --recurse --check-css --check-fragments --skip \"^https?://(?!localhost|127\\.0\\.0\\.1)\"",
+    "liens:externes": "linkinator dist --recurse --check-css --check-fragments",
+    "orthographe": "cspell --no-progress",
+    "lighthouse": "node scripts/lighthouse.mjs",
     "astro": "astro",
     "og": "node scripts/og-image.mjs"
   },
@@ -26,6 +31,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.14.1",
+    "@cspell/dict-fr-fr": "2.3.2",
+    "@playwright/test": "1.65.1",
+    "cspell": "10.5.2",
+    "lighthouse": "13.6.0",
+    "linkinator": "8.1.0",
     "typescript": "6.0.3",
     "vitest": "5.1.2"
   }
