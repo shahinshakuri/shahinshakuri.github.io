@@ -1,0 +1,242 @@
+---
+import Base from '../layouts/Base.astro';
+import { profil } from '../data/profil';
+import { ui } from '../i18n/fr';
+import { projets } from '../data/projets';
+import CarteProjet from '../components/CarteProjet.astro';
+import SectionCompetences from '../components/SectionCompetences.astro';
+import SectionContact from '../components/SectionContact.astro';
+import SectionExperience from '../components/SectionExperience.astro';
+import SectionFormation from '../components/SectionFormation.astro';
+import Avatar from '../components/Avatar.astro';
+import FiltresProjets from '../components/FiltresProjets.astro';
+---
+
+<Base accueil>
+  <section id="accueil" class="accueil" aria-labelledby="titre-accueil" data-fractale>
+    <!-- Décor : quadrillage + fractale vivante (src/scripts/fractale.ts). Masqué en mode sobre. -->
+    <div class="accueil__decor deco" aria-hidden="true"></div>
+    <canvas class="accueil__fractale deco" data-fractale-canvas aria-hidden="true"></canvas>
+    <div class="accueil__avatar deco" aria-hidden="true"><Avatar taille={132} /></div>
+
+    <div class="conteneur accueil__contenu">
+      <p class="accueil__invite mono" aria-hidden="true">
+        <span class="accueil__prompt">&gt;_</span> le labo de Shahin<span class="accueil__curseur ludique"></span>
+      </p>
+      <h1 id="titre-accueil">{profil.nom}</h1>
+      <p class="accueil__titre">{profil.titre}</p>
+      <p class="accueil__accroche">{profil.accroche}</p>
+      <p class="accueil__lieu">{profil.localisation}</p>
+      <div class="accueil__actions">
+        <a class="bouton bouton--accent" href={`mailto:${profil.email}`}>M’écrire</a>
+        <a class="bouton" href="#projets">Voir mes projets</a>
+      </div>
+    </div>
+
+    <div class="conteneur accueil__commandes ludique besoin-js" role="group" aria-label="Fractale du fond">
+      <button type="button" class="bouton bouton--petit" data-fractale-figer aria-pressed="false">Figer</button>
+      <button type="button" class="bouton bouton--petit" data-fractale-palette>
+        <span>Palette : <span data-fractale-nom-palette>Vert</span></span>
+      </button>
+    </div>
+  </section>
+
+  <section id="experience" class="section" aria-labelledby="titre-experience">
+    <div class="conteneur">
+      <span class="section__etiquette">01</span>
+      <h2 id="titre-experience">{ui.sections.experience}</h2>
+      <SectionExperience />
+    </div>
+  </section>
+
+  <section id="projets" class="section" aria-labelledby="titre-projets">
+    <div class="conteneur">
+      <span class="section__etiquette">02</span>
+      <h2 id="titre-projets">{ui.sections.projets}</h2>
+      <p class="section__intro">
+        Chaque projet est un niveau, du plus récent au plus ancien. Les projets d’école ont été réalisés en équipe.
+      </p>
+      <FiltresProjets />
+      <ol class="niveaux" role="list" data-niveaux>
+        {
+          projets.map((projet, i) => (
+            <li data-technos={JSON.stringify(projet.technologies)}>
+              <CarteProjet projet={projet} niveau={i + 1} />
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="competences" class="section" aria-labelledby="titre-competences">
+    <div class="conteneur">
+      <span class="section__etiquette">03</span>
+      <h2 id="titre-competences">{ui.sections.competences}</h2>
+      <p class="section__intro">Groupées par thème. Les liens mènent aux projets et expériences où je les ai utilisées.</p>
+      <SectionCompetences />
+    </div>
+  </section>
+
+  <section id="formation" class="section" aria-labelledby="titre-formation">
+    <div class="conteneur">
+      <span class="section__etiquette">04</span>
+      <h2 id="titre-formation">{ui.sections.formation}</h2>
+      <SectionFormation />
+    </div>
+  </section>
+
+  <section id="contact" class="section" aria-labelledby="titre-contact">
+    <div class="conteneur">
+      <span class="section__etiquette">05</span>
+      <h2 id="titre-contact">{ui.sections.contact}</h2>
+      <SectionContact />
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { demarrerFractale } from '../scripts/fractale';
+  const accueil = document.querySelector<HTMLElement>('[data-fractale]');
+  if (accueil) demarrerFractale(accueil);
+</script>
+
+<style>
+  .accueil {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--espace-7) var(--espace-6);
+    border-bottom: 1px solid var(--bordure);
+  }
+
+  .accueil__decor {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--quadrillage) 1px, transparent 1px),
+      linear-gradient(90deg, var(--quadrillage) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse 80% 70% at 70% 40%, #000 30%, transparent 80%);
+  }
+
+  /* Fractale : à droite du texte sur grand écran, en fond très léger sur mobile.
+     Le dégradé (mask) garde le texte lisible. Rien n'apparaît tant que WebGL n'est pas prêt. */
+  .accueil__fractale,
+  .accueil__avatar,
+  .accueil__commandes {
+    display: none;
+  }
+  .accueil:global(.fractale--prete) .accueil__fractale {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  }
+  .accueil:global(.fractale--prete) .accueil__commandes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-2);
+    margin-top: var(--espace-5);
+  }
+  @media (min-width: 60rem) {
+    .accueil:global(.fractale--prete) .accueil__fractale {
+      opacity: 1;
+      mask-image: linear-gradient(to right, transparent 30%, #000 62%);
+    }
+    .accueil:global(.fractale--prete) .accueil__avatar {
+      display: block;
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      left: 74%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 28px var(--fond));
+    }
+    .accueil:global(.fractale--prete) .accueil__commandes {
+      position: absolute;
+      inset-inline: 0;
+      bottom: var(--espace-4);
+      justify-content: flex-end;
+      margin-top: 0;
+    }
+    .accueil__accroche {
+      max-width: 34rem;
+    }
+  }
+
+  .accueil__contenu {
+    max-width: var(--largeur);
+  }
+
+  .accueil__invite {
+    margin-bottom: var(--espace-3);
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+  .accueil__prompt {
+    color: var(--accent-texte);
+    font-weight: 700;
+  }
+  .accueil__curseur {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    margin-left: 0.2em;
+    vertical-align: -0.2em;
+    background: var(--accent);
+    animation: clignote 1.1s steps(1) infinite;
+  }
+  @keyframes clignote {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .accueil h1 {
+    margin-bottom: var(--espace-2);
+  }
+
+  .accueil__titre {
+    font-family: var(--police-titre);
+    font-size: var(--taille-3);
+    font-weight: 600;
+    color: var(--accent-texte);
+    margin-bottom: var(--espace-4);
+  }
+
+  .accueil__accroche {
+    max-width: 40rem;
+    font-size: var(--taille-2);
+  }
+
+  .accueil__lieu {
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+
+  .accueil__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-3);
+    margin-top: var(--espace-4);
+  }
+
+  .niveaux {
+    display: grid;
+    gap: var(--espace-5);
+    margin: var(--espace-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Mode sobre : accueil plus compact */
+  :global(:root[data-sobre='true']) .accueil {
+    padding-block: var(--espace-6) var(--espace-5);
+  }
+</style>

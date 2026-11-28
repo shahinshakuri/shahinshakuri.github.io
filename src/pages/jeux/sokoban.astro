@@ -1,0 +1,36 @@
+---
+// Version web du Sokoban : un clin d'œil au projet Python/PyQt5 (niveaux créés pour ce site).
+// Elle reste jouable en mode sobre : la personne est venue ici exprès pour jouer.
+import Base from '../../layouts/Base.astro';
+import Sokoban from '../../components/Sokoban.astro';
+---
+
+<Base
+  titre="Sokoban, version web"
+  description="Mini-Sokoban jouable dans le navigateur, au clavier ou au doigt : un clin d'œil à mon projet Sokoban en Python."
+>
+  <section class="section">
+    <div class="conteneur jeu">
+      <nav class="fil" aria-label="Fil d’Ariane">
+        <a href="/#projet-sokoban">← Retour au projet Sokoban</a>
+      </nav>
+      <span class="section__etiquette">niveau bonus</span>
+      <h1>Sokoban, version web</h1>
+      <p class="section__intro">
+        Une petite version jouable dans le navigateur, en clin d’œil au projet d’école en Python. Les 3 niveaux ont été
+        créés pour ce site.
+      </p>
+      <Sokoban />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .jeu {
+    max-width: 48rem;
+  }
+  .fil {
+    margin-bottom: var(--espace-4);
+    font-size: var(--taille-0);
+  }
+</style>

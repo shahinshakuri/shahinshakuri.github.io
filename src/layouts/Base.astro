@@ -1,0 +1,92 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+
+import EnTete from '../components/EnTete.astro';
+import PiedDePage from '../components/PiedDePage.astro';
+import Terminal from '../components/Terminal.astro';
+import { profil } from '../data/profil';
+import { ui } from '../i18n/fr';
+
+interface Props {
+  titre?: string;
+  description?: string;
+  /** Sur une autre page que l'accueil, les liens du menu pointent vers « /#section ». */
+  accueil?: boolean;
+}
+
+const {
+  titre,
+  description = profil.accroche,
+  accueil = false,
+} = Astro.props;
+
+const titreComplet = titre ? `${titre} · ${profil.nom}` : `${profil.nom} — ${profil.titre}`;
+const urlCanonique = new URL(Astro.url.pathname, Astro.site);
+// Image d'aperçu : public/og.png, fabriquée par `npm run og` (scripts/og-image.mjs).
+const imageApercu = new URL('/og.png', Astro.site).href;
+---
+
+<!doctype html>
+<html lang="fr" class="no-js" data-theme="dark" data-sobre="false">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titreComplet}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={urlCanonique} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0d1117" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={profil.nom} />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={urlCanonique} />
+    <meta property="og:image" content={imageApercu} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${profil.nom} — ${profil.titre}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={imageApercu} />
+
+    <!--
+      Appliqué avant l'affichage pour éviter un « flash » de mauvais thème.
+      Thème : sombre par défaut, sauf choix mémorisé.
+      Mode sobre : choix mémorisé, sinon activé si le système demande moins d'animations.
+    -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.remove('no-js');
+        d.classList.add('js');
+        var sobre = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        try {
+          var t = localStorage.getItem('labo:theme');
+          if (t === 'light' || t === 'dark') d.dataset.theme = t;
+          var s = localStorage.getItem('labo:sobre');
+          if (s === '1') sobre = true;
+          if (s === '0') sobre = false;
+        } catch (e) {}
+        d.dataset.sobre = sobre ? 'true' : 'false';
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="lien-evitement" href="#contenu">{ui.lienEvitement}</a>
+    <EnTete accueil={accueil} />
+    <main id="contenu" tabindex="-1">
+      <slot />
+    </main>
+    <PiedDePage />
+    <Terminal />
+    <script>
+      import '../scripts/preferences';
+    </script>
+  </body>
+</html>

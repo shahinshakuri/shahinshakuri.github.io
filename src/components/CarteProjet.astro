@@ -1,0 +1,193 @@
+---
+// Carte d'un projet présenté comme un « niveau » de jeu.
+// Les données viennent de src/data/projets.ts : ne rien écrire en dur ici.
+import { Picture } from 'astro:assets';
+import type { Projet } from '../data/projets';
+import IllustrationLabyrinthe from './IllustrationLabyrinthe.astro';
+
+interface Props {
+  projet: Projet;
+  niveau: number;
+}
+
+const { projet, niveau } = Astro.props;
+const idTitre = `titre-projet-${projet.slug}`;
+---
+
+<article id={`projet-${projet.slug}`} class="carte" aria-labelledby={idTitre}>
+  <div class="carte__visuel">
+    {
+      projet.image && (
+        <Picture
+          src={projet.image.src}
+          alt={projet.image.alt}
+          formats={['avif']}
+          fallbackFormat="webp"
+          widths={[480, 800]}
+          sizes="(min-width: 60rem) 26rem, 100vw"
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    }
+    {projet.illustration === 'labyrinthe' && <IllustrationLabyrinthe />}
+  </div>
+
+  <div class="carte__corps">
+    <p class="carte__niveau mono">
+      Niveau {niveau}
+      {projet.enCours && <span class="badge">En cours</span>}
+    </p>
+    <h3 id={idTitre}>{projet.titre}</h3>
+    <ul class="carte__meta" aria-label="En bref">
+      <li>{projet.annee}</li>
+      <li>{projet.contexte}</li>
+      <li>{projet.equipe}</li>
+    </ul>
+
+    <p class="carte__resume">{projet.resume}</p>
+    <ul class="carte__points">
+      {projet.points.map((point) => <li>{point}</li>)}
+    </ul>
+    {projet.note && <p class="carte__note">{projet.note}</p>}
+
+    <ul class="puces" aria-label="Technologies">
+      {projet.technologies.map((techno) => <li class="puce">{techno}</li>)}
+    </ul>
+
+    {
+      (projet.page || projet.essai || projet.depot) && (
+        <div class="carte__actions">
+          {projet.page && (
+            <a class="bouton bouton--accent" href={projet.page}>
+              Voir le projet en détail
+            </a>
+          )}
+          {projet.essai && (
+            <a class="bouton bouton--accent" href={projet.essai}>
+              Essayer la version web
+            </a>
+          )}
+          {projet.depot && (
+            <a class="bouton" href={projet.depot} rel="noopener">
+              Code sur GitHub<span class="visuellement-cache"> ({projet.titre})</span>
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .carte {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: 1px solid var(--bordure);
+    border-radius: calc(var(--rayon) * 2);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  @media (min-width: 60rem) {
+    .carte {
+      grid-template-columns: 26rem 1fr;
+    }
+  }
+
+  .carte__visuel {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--bordure);
+    aspect-ratio: 16 / 10;
+  }
+  @media (min-width: 60rem) {
+    .carte__visuel {
+      aspect-ratio: auto;
+      border-bottom: 0;
+      border-right: 1px solid var(--bordure);
+    }
+  }
+  .carte__visuel :global(picture),
+  .carte__visuel :global(img),
+  .carte__visuel :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .carte__visuel :global(img) {
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .carte__corps {
+    padding: var(--espace-4);
+  }
+  @media (min-width: 60rem) {
+    .carte__corps {
+      padding: var(--espace-5);
+    }
+  }
+
+  .carte__niveau {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+    margin-bottom: var(--espace-2);
+    color: var(--accent-texte);
+    font-size: var(--taille-0);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .badge {
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    font-family: var(--police-texte);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .carte h3 {
+    margin-bottom: var(--espace-2);
+  }
+
+  .carte__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-1) var(--espace-3);
+    margin: 0 0 var(--espace-3);
+    padding: 0;
+    list-style: none;
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+  .carte__meta li + li::before {
+    content: '·';
+    margin-right: var(--espace-3);
+  }
+
+  .carte__resume {
+    font-weight: 500;
+  }
+
+  .carte__points {
+    margin: 0 0 var(--espace-3);
+    padding-left: 1.2rem;
+  }
+  .carte__points li + li {
+    margin-top: var(--espace-1);
+  }
+
+  .carte__note {
+    color: var(--texte-doux);
+    font-style: italic;
+  }
+
+  .carte__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-3);
+    margin-top: var(--espace-4);
+  }
+</style>

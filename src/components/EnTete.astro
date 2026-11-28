@@ -1,0 +1,250 @@
+---
+import Avatar from './Avatar.astro';
+import { profil } from '../data/profil';
+import { ui, sectionsMenu } from '../i18n/fr';
+
+interface Props {
+  accueil?: boolean;
+}
+const { accueil = false } = Astro.props;
+const prefixe = accueil ? '' : '/';
+---
+
+<header class="entete">
+  <div class="conteneur entete__ligne">
+    <a class="entete__marque" href={accueil ? '#accueil' : '/'}>
+      <Avatar taille={36} />
+      <span class="entete__nom">{profil.nom}</span>
+    </a>
+
+    <nav class="entete__nav" aria-label={ui.menuPrincipal}>
+      <ul>
+        {
+          sectionsMenu.map((id) => (
+            <li>
+              <a href={`${prefixe}#${id}`}>{ui.sections[id]}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="entete__reglages besoin-js">
+      <button
+        type="button"
+        class="interrupteur"
+        role="switch"
+        aria-checked="false"
+        data-action="sobre"
+        title={ui.sobre.aide}
+      >
+        <span class="interrupteur__piste" aria-hidden="true"><span class="interrupteur__pastille"></span></span>
+        <span class="interrupteur__libelle">{ui.sobre.libelle}</span>
+      </button>
+
+      <button
+        type="button"
+        class="bouton-icone bouton-icone--terminal mono ludique"
+        data-ouvrir-terminal
+        aria-label="Ouvrir le terminal"
+        aria-keyshortcuts="²"
+        title="Ouvrir le terminal (touche ²)"
+      >
+        <span aria-hidden="true">&gt;_</span>
+      </button>
+
+      <button
+        type="button"
+        class="bouton-icone"
+        data-action="theme"
+        aria-label={ui.theme.versClair}
+        data-label-clair={ui.theme.versClair}
+        data-label-sombre={ui.theme.versSombre}
+      >
+        <!-- Soleil : affiché en thème sombre (pour passer au clair) -->
+        <svg class="icone icone--soleil" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.5"></circle>
+          <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path>
+        </svg>
+        <!-- Lune : affichée en thème clair (pour passer au sombre) -->
+        <svg class="icone icone--lune" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .entete {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--fond) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--bordure);
+  }
+
+  .entete__ligne {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--espace-3);
+    min-height: var(--hauteur-entete);
+  }
+
+  .entete__marque {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+    color: var(--texte);
+    text-decoration: none;
+    font-family: var(--police-titre);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .entete__nav ul {
+    display: flex;
+    justify-content: center;
+    gap: var(--espace-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .entete__nav a {
+    display: block;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    color: var(--texte-doux);
+    text-decoration: none;
+    font-size: var(--taille-0);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .entete__nav a:hover {
+    color: var(--texte);
+    background: var(--surface-2);
+  }
+
+  .entete__reglages {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-2);
+  }
+
+  /* Interrupteur « Mode sobre » */
+  .interrupteur {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-2);
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--rayon);
+    background: transparent;
+    color: var(--texte-doux);
+    font: inherit;
+    font-size: var(--taille-0);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .interrupteur:hover {
+    color: var(--texte);
+  }
+  .interrupteur__piste {
+    position: relative;
+    width: 2.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--bordure-forte);
+    background: var(--surface);
+    transition: background-color var(--duree) var(--courbe), border-color var(--duree) var(--courbe);
+  }
+  .interrupteur__pastille {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--texte-doux);
+    transform: translateY(-50%);
+    transition: transform var(--duree) var(--courbe), background-color var(--duree) var(--courbe);
+  }
+  .interrupteur[aria-checked='true'] {
+    color: var(--texte);
+  }
+  .interrupteur[aria-checked='true'] .interrupteur__piste {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .interrupteur[aria-checked='true'] .interrupteur__pastille {
+    background: var(--sur-accent);
+    transform: translate(1rem, -50%);
+  }
+
+  /* Bouton thème */
+  .bouton-icone {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    background: var(--surface);
+    color: var(--texte);
+    cursor: pointer;
+  }
+  .bouton-icone:hover {
+    border-color: var(--accent);
+  }
+  .bouton-icone--terminal {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-texte);
+  }
+  .icone {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  :global(:root[data-theme='dark']) .icone--lune,
+  :global(:root[data-theme='light']) .icone--soleil {
+    display: none;
+  }
+
+  /* Tablette et mobile : le menu passe sur une 2e ligne, défilable, sans JavaScript */
+  @media (max-width: 60rem) {
+    .entete__ligne {
+      grid-template-columns: 1fr auto;
+      row-gap: 0;
+      padding-top: var(--espace-2);
+    }
+    .entete__nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      margin-inline: calc(-1 * var(--espace-2));
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .entete__nav ul {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .entete__nom {
+      display: none;
+    }
+    .interrupteur__libelle {
+      font-size: 0.8125rem;
+    }
+  }
+</style>

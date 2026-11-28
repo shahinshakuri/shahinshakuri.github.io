@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shahinshakuri.github.io/sitemap-index.xml

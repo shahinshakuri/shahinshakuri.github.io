@@ -1,0 +1,55 @@
+---
+// Filtres des projets par technologie. Sans JavaScript, ils sont cachés et tous les projets restent affichés.
+// Les cartes à filtrer sont les <li data-technos="[...]"> de la liste [data-niveaux] (index.astro).
+import { technologies } from '../data/projets';
+---
+
+<div class="filtres besoin-js" data-filtres>
+  <p class="filtres__titre" id="titre-filtres">Filtrer par technologie</p>
+  <ul class="filtres__liste" role="list" aria-labelledby="titre-filtres">
+    <li>
+      <button type="button" class="bouton bouton--petit" data-filtre="" aria-pressed="true">Tous</button>
+    </li>
+    {
+      technologies.map((techno) => (
+        <li>
+          <button type="button" class="bouton bouton--petit mono" data-filtre={techno} aria-pressed="false">
+            {techno}
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="filtres__resultat" role="status" data-filtres-resultat></p>
+</div>
+
+<script>
+  import { brancherFiltres } from '../scripts/filtres';
+  brancherFiltres();
+</script>
+
+<style>
+  .filtres {
+    margin-top: var(--espace-4);
+  }
+  .filtres__titre {
+    margin-bottom: var(--espace-2);
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+    font-weight: 600;
+  }
+  .filtres__liste {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .filtres__resultat {
+    min-height: 1.65em;
+    margin: var(--espace-3) 0 0;
+    color: var(--texte-doux);
+    font-size: var(--taille-0);
+  }
+</style>

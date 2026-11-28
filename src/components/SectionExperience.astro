@@ -1,0 +1,75 @@
+---
+// Expérience : données d'abord (alternance), puis le stage. Pas de frise chronologique.
+import { experiences } from '../data/experiences';
+---
+
+<ol class="experiences" role="list">
+  {
+    experiences.map((exp) => (
+      <li id={`experience-${exp.id}`} class="experience">
+        <p class="experience__type mono">
+          {exp.type} · {exp.periode}
+        </p>
+        <h3>{exp.structure}</h3>
+        <p>{exp.resume}</p>
+        {exp.realisations && (
+          <ul class="experience__realisations">
+            {exp.realisations.map((r) => (
+              <li>
+                <strong>{r.titre}</strong> : {r.texte}
+              </li>
+            ))}
+          </ul>
+        )}
+        {exp.technologies && (
+          <ul class="puces" aria-label="Technologies">
+            {exp.technologies.map((t) => (
+              <li class="puce">{t}</li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .experiences {
+    display: grid;
+    gap: var(--espace-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 60rem) {
+    .experiences {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .experience {
+    padding: var(--espace-4) var(--espace-5);
+    border: 1px solid var(--bordure);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--rayon);
+    background: var(--surface);
+  }
+
+  .experience__type {
+    margin-bottom: var(--espace-1);
+    color: var(--accent-texte);
+    font-size: var(--taille-0);
+  }
+
+  .experience h3 {
+    font-size: var(--taille-2);
+  }
+
+  .experience__realisations {
+    margin: 0 0 var(--espace-3);
+    padding-left: 1.2rem;
+  }
+  .experience__realisations li + li {
+    margin-top: var(--espace-2);
+  }
+</style>
